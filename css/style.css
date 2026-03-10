@@ -1,0 +1,642 @@
+/* ============================================================
+   HAYAA — On the Path to Purity
+   style.css — All visual styles
+   ============================================================ */
+
+/* ── 1. Reset & CSS Variables ──────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Backgrounds */
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface2:  #1e2530;
+  --border:    #2a3140;
+
+  /* Brand Colors */
+  --accent:    #4ecca3;
+  --accent2:   #f6c90e;
+  --accent3:   #e05c5c;
+  --islamic:   #c9a84c;
+
+  /* Text */
+  --text:      #e8eaf0;
+  --muted:     #7a8494;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Hind Siliguri', sans-serif;
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: var(--surface); }
+::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 2px; }
+
+/* ── 2. Keyframe Animations ────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(78, 204, 163, .25); }
+  50%       { box-shadow: 0 0 28px rgba(78, 204, 163, .60); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.05); }
+}
+@keyframes badgePop {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: .6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ── 3. Utility Classes ────────────────────────────────────── */
+.fadeUp { animation: fadeUp .4s ease both; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.card:hover {
+  border-color: rgba(78, 204, 163, .3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, .4);
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'Hind Siliguri', sans-serif;
+  font-weight: 600;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0d1117;
+  padding: 11px 22px;
+  font-size: 15px;
+}
+.btn-primary:hover    { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 9px 18px;
+  font-size: 14px;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-danger {
+  background: rgba(224, 92, 92, .12);
+  color: var(--accent3);
+  border: 1px solid rgba(224, 92, 92, .25);
+  padding: 9px 18px;
+  font-size: 14px;
+}
+.btn-danger:hover { background: rgba(224, 92, 92, .22); }
+
+.btn-islamic {
+  background: rgba(201, 168, 76, .12);
+  color: var(--islamic);
+  border: 1px solid rgba(201, 168, 76, .3);
+  padding: 9px 18px;
+  font-size: 14px;
+}
+.btn-islamic:hover { background: rgba(201, 168, 76, .22); }
+
+/* Misc Utilities */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.section-title {
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.pbar-outer {
+  background: var(--surface2);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+}
+.pbar-inner {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), #38b89a);
+  transition: width .6s ease;
+}
+textarea:focus, input:focus {
+  outline: 2px solid rgba(78, 204, 163, .4) !important;
+  outline-offset: 0;
+}
+
+/* ── 4. App Layout ─────────────────────────────────────────── */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#main-content {
+  flex: 1;
+  padding: 16px 16px 86px;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── 5. Header ─────────────────────────────────────────────── */
+#app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+}
+.header-logo  { display: flex; align-items: center; gap: 10px; }
+.logo-icon    {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #4ecca3, #2a9d8f);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; box-shadow: 0 0 14px rgba(78, 204, 163, .4); flex-shrink: 0;
+}
+.logo-name    { font-family: 'Noto Serif Bengali', serif; font-size: 18px; font-weight: 700; color: var(--accent); }
+.logo-sub     { font-size: 11px; color: var(--muted); margin-top: -2px; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+
+#islamic-btn {
+  border-radius: 20px; padding: 5px 12px;
+  font: 600 12px 'Hind Siliguri', sans-serif;
+  cursor: pointer; transition: all .2s;
+}
+#streak-badge {
+  background: rgba(246, 201, 14, .1);
+  border: 1px solid rgba(246, 201, 14, .3);
+  border-radius: 20px; padding: 5px 11px;
+  color: var(--accent2); font-size: 13px; font-weight: 700;
+}
+
+/* ── 6. Islamic Banner ─────────────────────────────────────── */
+#islamic-banner {
+  background: linear-gradient(135deg, rgba(201, 168, 76, .1), rgba(201, 168, 76, .04));
+  border-bottom: 1px solid rgba(201, 168, 76, .18);
+  padding: 10px 18px; text-align: center;
+}
+.banner-ar  { font-size: 17px; color: var(--islamic); font-family: 'Noto Serif Bengali', serif; }
+.banner-bn  { font-size: 12px; color: #d4b874; margin-top: 2px; }
+.banner-ref { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+/* ── 7. Bottom Navigation ──────────────────────────────────── */
+#bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 500px;
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: flex; justify-content: space-around;
+  padding: 7px 0 9px; z-index: 100;
+}
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 3px 10px; color: var(--muted);
+  transition: color .2s; position: relative;
+  font-family: 'Hind Siliguri', sans-serif;
+}
+.nav-btn.active { color: var(--accent); }
+.nav-btn.active::before {
+  content: ''; position: absolute; top: -7px; left: 50%;
+  transform: translateX(-50%); width: 24px; height: 2px;
+  border-radius: 1px; background: var(--accent);
+}
+.nav-icon  { font-size: 20px; line-height: 1; }
+.nav-label { font-size: 11px; font-weight: 600; }
+
+/* ── 8. Tab Panels ─────────────────────────────────────────── */
+.tab-panel              { display: none; flex-direction: column; gap: 14px; }
+.tab-panel.active       { display: flex; }
+
+/* ── 9. Dashboard ──────────────────────────────────────────── */
+.streak-hero {
+  background: linear-gradient(135deg, rgba(78, 204, 163, .08), rgba(42, 157, 143, .04));
+  border: 1px solid rgba(78, 204, 163, .22);
+  border-radius: 20px; padding: 26px 18px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.streak-hero::after {
+  content: ''; position: absolute; top: -50px; right: -50px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(78, 204, 163, .07), transparent 70%);
+  pointer-events: none;
+}
+.streak-label  { font-size: 12px; color: var(--muted); letter-spacing: 1px; margin-bottom: 4px; }
+.streak-number {
+  font-size: 68px; font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+  color: var(--accent); line-height: 1;
+  animation: glow 2s ease-in-out infinite;
+}
+.streak-unit  { font-size: 15px; color: var(--muted); margin-bottom: 12px; }
+.streak-stats {
+  margin-top: 18px; display: grid;
+  grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+}
+.stat-box {
+  background: rgba(255, 255, 255, .03);
+  border-radius: 10px; padding: 10px 4px;
+  border: 1px solid var(--border); text-align: center;
+}
+.stat-val { font-size: 22px; font-weight: 700; }
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+.emergency-btn {
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, rgba(224, 92, 92, .12), rgba(224, 92, 92, .06));
+  border: 2px solid rgba(224, 92, 92, .35);
+  border-radius: 14px; cursor: pointer;
+  color: #f08080; font-size: 15px; font-weight: 700;
+  font-family: 'Hind Siliguri', sans-serif;
+  animation: pulse 2s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .2s;
+}
+.emergency-btn:hover { background: rgba(224, 92, 92, .2); }
+
+.mood-grid {
+  display: flex; gap: 6px; justify-content: space-between;
+}
+.mood-btn {
+  flex: 1; padding: 9px 2px;
+  background: var(--surface2); border: 2px solid var(--border);
+  border-radius: 10px; cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column; align-items: center;
+}
+.mood-btn.selected   { background: rgba(78, 204, 163, .15); border-color: var(--accent); }
+.mood-emoji          { font-size: 20px; }
+.mood-lbl            { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: 'Hind Siliguri', sans-serif; }
+.mood-btn.selected .mood-lbl { color: var(--accent); }
+
+.relapse-btn {
+  width: 100%; padding: 11px;
+  background: transparent; border: 1px dashed var(--border);
+  border-radius: 12px; cursor: pointer;
+  color: var(--muted); font-size: 13px;
+  font-family: 'Hind Siliguri', sans-serif; transition: all .2s;
+}
+.relapse-btn:hover { border-color: rgba(224, 92, 92, .4); color: var(--accent3); }
+
+/* ── 10. Prayer Times ──────────────────────────────────────── */
+.prayer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.prayer-cell {
+  background: var(--surface2); border-radius: 10px;
+  padding: 8px 10px; border: 1px solid var(--border);
+  text-align: center; transition: all .2s;
+}
+.prayer-cell.next-prayer {
+  border-color: rgba(201, 168, 76, .55);
+  background: rgba(201, 168, 76, .09);
+}
+.prayer-name { font-size: 11px; color: var(--muted); }
+.prayer-time { font-size: 14px; font-weight: 700; color: #d4b874; margin-top: 2px; }
+
+/* ── 11. Mood Verse Card ───────────────────────────────────── */
+.mood-verse-card {
+  background: linear-gradient(135deg, rgba(201, 168, 76, .1), rgba(201, 168, 76, .03));
+  border: 1px solid rgba(201, 168, 76, .22);
+  border-radius: 14px; padding: 14px 16px;
+  border-left: 3px solid var(--islamic);
+}
+
+/* ── 12. Pledge Checkbox ───────────────────────────────────── */
+.pledge-checkbox {
+  width: 24px; height: 24px; border-radius: 7px;
+  border: 2px solid var(--border);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0; font-size: 14px; color: #0d1117;
+}
+.pledge-checkbox.checked { background: var(--accent); border-color: var(--accent); }
+
+/* ── 13. Letter Preview ────────────────────────────────────── */
+.letter-preview {
+  background: rgba(107, 168, 247, .06);
+  border: 1px solid rgba(107, 168, 247, .18);
+  border-radius: 12px; padding: 14px;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 13px; color: #9abff7; line-height: 1.75;
+  max-height: 120px; overflow: hidden; position: relative;
+}
+.letter-preview::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40px; background: linear-gradient(transparent, var(--surface));
+}
+
+/* ── 14. Urge Tab ──────────────────────────────────────────── */
+.urge-count-box {
+  background: linear-gradient(135deg, rgba(78, 204, 163, .07), rgba(78, 204, 163, .02));
+  border: 1px solid rgba(78, 204, 163, .18);
+  border-radius: 14px; padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.urge-win-banner {
+  background: rgba(78, 204, 163, .15);
+  border: 1px solid rgba(78, 204, 163, .4);
+  border-radius: 14px; padding: 16px; text-align: center;
+}
+.tool-card-btn {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: 12px; text-align: left;
+}
+.tool-card-btn:hover { border-color: rgba(78, 204, 163, .3); }
+
+.trigger-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.trigger-btn  { font-size: 12px; padding: 6px 12px; }
+
+/* ── 15. Tasbih ────────────────────────────────────────────── */
+.tasbih-btn {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 76, .22), rgba(201, 168, 76, .05));
+  border: 3px solid rgba(201, 168, 76, .5);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform .1s;
+  position: relative; overflow: hidden; margin: 0 auto; user-select: none;
+}
+.tasbih-btn:active { transform: scale(.93); }
+.tasbih-count {
+  font-size: 44px; font-weight: 700; color: var(--islamic);
+  font-family: 'Noto Serif Bengali', serif; line-height: 1;
+}
+.tasbih-sub   { font-size: 11px; color: #d4b874; margin-top: 5px; }
+.tasbih-ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(201, 168, 76, .35);
+  animation: ripple .55s ease-out forwards; pointer-events: none;
+}
+
+/* ── 16. Habits Tab ────────────────────────────────────────── */
+.habit-card {
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; padding: 16px 20px;
+  border-radius: 16px; margin-bottom: 8px;
+}
+.habit-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--surface2); display: flex; align-items: center; justify-content: center;
+  font-size: 19px; border: 1px solid var(--border); flex-shrink: 0; transition: all .2s;
+}
+.habit-info   { flex: 1; }
+.habit-title  { font-size: 14px; font-weight: 600; color: var(--muted); transition: color .2s; }
+.habit-pts    { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.habit-check  {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface2); border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #0d1117; font-weight: 700; transition: all .2s; flex-shrink: 0;
+}
+.habit-card.done .habit-icon      { background: rgba(78, 204, 163, .14); border-color: rgba(78, 204, 163, .28); }
+.habit-card.done .habit-title     { color: var(--text); }
+.habit-card.done .habit-check     { background: var(--accent); border-color: var(--accent); }
+.habit-card.done-islamic .habit-icon { background: rgba(201, 168, 76, .15); border-color: rgba(201, 168, 76, .3); }
+
+.points-box {
+  background: linear-gradient(135deg, rgba(246, 201, 14, .08), rgba(246, 201, 14, .03));
+  border: 1px solid rgba(246, 201, 14, .22);
+  border-radius: 14px; padding: 13px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ── 17. Quran Tracker ─────────────────────────────────────── */
+.quran-tracker {
+  background: rgba(201, 168, 76, .05);
+  border: 1px solid rgba(201, 168, 76, .2);
+  border-radius: 14px; padding: 16px;
+}
+.qt-input {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px; color: var(--text);
+  font-size: 13px; font-family: 'Hind Siliguri', sans-serif;
+}
+
+/* ── 18. Progress Tab ──────────────────────────────────────── */
+.stats-grid          { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-card           { text-align: center; padding: 14px 10px; }
+.stat-card-val       { font-size: 26px; font-weight: 700; font-family: 'Noto Serif Bengali', serif; }
+.stat-card-lbl       { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.mood-chart          { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+.mood-bar-col        { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: flex-end; height: 100%; }
+.mood-bar            { width: 100%; border-radius: 5px 5px 0 0; border: 1px solid rgba(78, 204, 163, .18); transition: height .5s ease; min-height: 4px; }
+.mood-day            { font-size: 9px; color: var(--muted); }
+
+.achieve-grid        { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.achieve-card        { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; text-align: center; opacity: .45; transition: all .3s; }
+.achieve-card.earned { background: rgba(78, 204, 163, .07); border-color: rgba(78, 204, 163, .25); opacity: 1; }
+.achieve-icon        { font-size: 24px; }
+.achieve-title       { font-size: 12px; font-weight: 700; color: var(--text); margin-top: 4px; }
+.achieve-desc        { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.achieve-badge       { font-size: 10px; color: var(--accent); margin-top: 4px; font-weight: 700; }
+
+.timeline-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+.timeline-dot  {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: var(--surface2); border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--muted); transition: all .3s;
+}
+.timeline-dot.reached { background: rgba(78, 204, 163, .18); border-color: var(--accent); color: var(--accent); }
+
+.flatline-card {
+  background: rgba(107, 168, 247, .05);
+  border: 1px solid rgba(107, 168, 247, .18);
+  border-radius: 14px; padding: 16px;
+  border-left: 3px solid #6ba8f7;
+}
+
+/* ── 19. Trigger Summary ───────────────────────────────────── */
+.trigger-bar-row   { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trigger-bar-label {
+  font-size: 12px; color: var(--text); width: 110px;
+  flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.trigger-bar-track { flex: 1; background: var(--surface2); border-radius: 99px; height: 8px; overflow: hidden; }
+.trigger-bar-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent3), #f08080); transition: width .6s ease; }
+.trigger-bar-count { font-size: 11px; color: var(--muted); width: 20px; text-align: right; }
+
+/* ── 20. Settings ──────────────────────────────────────────── */
+.toggle-row   { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.toggle-label { font-size: 14px; color: var(--text); font-weight: 600; }
+.toggle-desc  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.toggle-switch {
+  width: 44px; height: 24px; border-radius: 12px; cursor: pointer;
+  background: var(--surface2); border: 1px solid var(--border);
+  position: relative; transition: all .3s; flex-shrink: 0;
+}
+.toggle-switch.on           { border-color: var(--accent); background: var(--accent); }
+.toggle-switch.on-islamic   { border-color: var(--islamic); background: var(--islamic); }
+.toggle-knob {
+  position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: white; transition: left .25s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+}
+.toggle-switch.on .toggle-knob,
+.toggle-switch.on-islamic .toggle-knob { left: 22px; }
+
+.science-item {
+  font-size: 12px; color: var(--muted); padding: 6px 0;
+  border-bottom: 1px solid var(--border); display: flex; gap: 8px;
+}
+.science-item:last-child { border-bottom: none; }
+
+/* ── 21. Accountability Partner ────────────────────────────── */
+.partner-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  border: none; font-family: 'Hind Siliguri', sans-serif;
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  width: 100%; justify-content: center; transition: all .2s;
+}
+.partner-wa   { background: rgba(37, 211, 102, .12); color: #25d366; border: 1px solid rgba(37, 211, 102, .3); }
+.partner-wa:hover  { background: rgba(37, 211, 102, .22); }
+.partner-mail { background: rgba(107, 168, 247, .1); color: #6ba8f7; border: 1px solid rgba(107, 168, 247, .25); }
+.partner-mail:hover { background: rgba(107, 168, 247, .2); }
+
+/* ── 22. DNS Guide ─────────────────────────────────────────── */
+.dns-step {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.dns-step:last-child { border-bottom: none; }
+.dns-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(78, 204, 163, .15); border: 1px solid rgba(78, 204, 163, .3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--accent); flex-shrink: 0; margin-top: 1px;
+}
+.dns-code {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 3px 10px; font-family: monospace; font-size: 13px; color: var(--accent);
+  display: inline-block; margin-top: 4px;
+}
+
+/* ── 23. Dopamine Menu ─────────────────────────────────────── */
+.dopa-card {
+  background: linear-gradient(135deg, rgba(181, 123, 238, .08), rgba(181, 123, 238, .03));
+  border: 1px solid rgba(181, 123, 238, .22);
+  border-radius: 14px; padding: 16px;
+}
+
+/* ── 24. Modals ────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, .78);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 18px; backdrop-filter: blur(12px);
+}
+.modal-box {
+  max-width: 390px; width: 100%;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 22px;
+  animation: fadeUp .35s ease both;
+  max-height: 88vh; overflow-y: auto;
+}
+
+/* ── 25. Achievement Toast ─────────────────────────────────── */
+#achievement-toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #1e2530, #252d3a);
+  border: 1px solid rgba(246, 201, 14, .4);
+  border-radius: 16px; padding: 14px 22px; z-index: 300;
+  display: none; align-items: center; gap: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  animation: badgePop .5s cubic-bezier(.34, 1.56, .64, 1) both;
+  max-width: 320px; width: calc(100% - 32px);
+}
+#achievement-toast.visible { display: flex; }
+
+/* ── 26. Tool Panel Internals ──────────────────────────────── */
+#breath-circle {
+  width: 120px; height: 120px; border-radius: 50%;
+  margin: 0 auto 16px;
+  background: rgba(78, 204, 163, .1); border: 2px solid rgba(78, 204, 163, .4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--accent); font-weight: 700;
+  box-shadow: 0 0 30px rgba(78, 204, 163, .15);
+  transition: transform .3s ease, background .3s ease;
+}
+#timer-svg  { display: block; margin: 0 auto; }
+.cbt-textarea {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 11px;
+  color: var(--text); font-size: 13px; resize: vertical;
+  font-family: 'Hind Siliguri', sans-serif; line-height: 1.6; min-height: 80px;
+}
+.cbt-result {
+  margin-top: 12px; padding: 13px;
+  background: rgba(107, 168, 247, .08); border: 1px solid rgba(107, 168, 247, .2);
+  border-radius: 10px; font-size: 14px; color: #9abff7; line-height: 1.75;
+  font-family: 'Noto Serif Bengali', serif; display: none;
+}
+.cbt-error { color: var(--accent3); font-size: 12px; margin-top: 8px; display: none; }
+
+.surf-progress  { display: flex; gap: 5px; margin-bottom: 14px; }
+.surf-step-dot  { flex: 1; height: 4px; border-radius: 2px; background: var(--surface2); transition: background .3s; }
+.surf-step-dot.active { background: var(--accent); }
+.surf-content   { background: var(--surface2); border-radius: 10px; padding: 14px; margin-bottom: 12px; min-height: 75px; }
+.surf-q         { font-size: 14px; color: var(--text); font-family: 'Noto Serif Bengali', serif; line-height: 1.6; margin-bottom: 6px; }
+.surf-hint      { font-size: 12px; color: var(--muted); }
+
+.sense-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 12px;
+  border-radius: 10px; cursor: pointer;
+  background: var(--surface2); border: 1px solid var(--border);
+  transition: all .2s; margin-bottom: 7px;
+}
+.sense-item.done         { background: rgba(78, 204, 163, .1); border-color: rgba(78, 204, 163, .3); }
+.sense-check             { font-size: 16px; color: var(--muted); margin-left: auto; }
+.sense-item.done .sense-check { color: var(--accent); }
+
+.trigger-log-item {
+  display: flex; gap: 10px; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.trigger-log-item:last-child { border-bottom: none; }
+.loop-diagram { display: flex; justify-content: space-between; text-align: center; }
+
+/* ── 27. Responsive ────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .streak-number { font-size: 56px; }
+  .stat-val      { font-size: 18px; }
+}
