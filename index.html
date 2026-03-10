@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>হায়া — পরিশুদ্ধির পথে</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap"/>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════════ HEADER ══════════════════════════════════ -->
+  <header id="app-header">
+    <div class="header-logo">
+      <div class="logo-icon">🌿</div>
+      <div>
+        <div class="logo-name">হায়া</div>
+        <div class="logo-sub" id="header-date-sub">পরিশুদ্ধির পথে</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="islamic-btn" class="btn" onclick="toggleIslamic()">☪️ ইসলামিক</button>
+      <div id="streak-badge">🔥 <span id="streak-val">0</span> দিন</div>
+    </div>
+  </header>
+
+  <!-- ══════════════════ ISLAMIC BANNER ══════════════════════════ -->
+  <div id="islamic-banner" style="display:none;" class="fadeUp">
+    <div class="banner-ar" id="banner-ar"></div>
+    <div class="banner-bn" id="banner-bn"></div>
+    <div class="banner-ref" id="banner-ref"></div>
+  </div>
+
+  <!-- ══════════════════ MAIN CONTENT ════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ─────────────── DASHBOARD TAB ─────────────────────────── -->
+    <div id="tab-dashboard" class="tab-panel fadeUp">
+
+      <!-- Streak Hero -->
+      <div class="streak-hero">
+        <div class="streak-label">বর্তমান স্ট্রিক</div>
+        <div class="streak-number" id="dash-streak">0</div>
+        <div class="streak-unit">দিন</div>
+        <span id="phase-tag" class="tag"></span>
+        <div id="hijri-date-display" style="display:none;font-size:11px;color:var(--islamic);margin-top:8px;"></div>
+        <div class="streak-stats">
+          <div class="stat-box"><div class="stat-val" id="dash-longest" style="color:#b57bee">0</div><div class="stat-lbl">দিন সর্বোচ্চ</div></div>
+          <div class="stat-box"><div class="stat-val" id="dash-total"   style="color:#6ba8f7">0</div><div class="stat-lbl">দিন মোট</div></div>
+          <div class="stat-box"><div class="stat-val" id="dash-urges"   style="color:var(--accent2)">0</div><div class="stat-lbl">বার ইচ্ছা জয়</div></div>
+        </div>
+      </div>
+
+      <!-- Emergency Button -->
+      <button class="emergency-btn" onclick="openEmergency()">🚨 জরুরি সাহায্য দরকার — এখনই সুরক্ষা চাই</button>
+
+      <!-- Morning Pledge -->
+      <div class="card" style="border-left:3px solid var(--accent);">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;">🌅 আজকের অঙ্গীকার</div>
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <div id="pledge-check" class="pledge-checkbox" onclick="togglePledge()"></div>
+          <div style="font-size:14px;color:var(--text);line-height:1.65;font-family:'Noto Serif Bengali',serif;">"শুধু আজকের জন্য — আমি এই অভ্যাস থেকে দূরে থাকব। শুধু আজ।"</div>
+        </div>
+        <div id="pledge-done-msg" style="display:none;margin-top:10px;padding:8px 12px;background:rgba(78,204,163,.1);border-radius:8px;font-size:13px;color:var(--accent);">✅ অসাধারণ! আজকের অঙ্গীকার নেওয়া হয়েছে। তুমি পারবে!</div>
+      </div>
+
+      <!-- Prayer Times (shown in Islamic mode only) -->
+      <div id="prayer-card" class="card" style="border-left:3px solid var(--islamic);display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:14px;font-weight:700;color:var(--islamic);">🕌 আজকের নামাজের সময়</div>
+          <span id="next-prayer-tag" class="tag" style="background:rgba(201,168,76,.12);color:var(--islamic);font-size:11px;"></span>
+        </div>
+        <div id="prayer-content">
+          <div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">⏳ অবস্থান ব্যবহার করে লোড হচ্ছে…</div>
+        </div>
+      </div>
+
+      <!-- Mood Tracker -->
+      <div class="card">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">
+          আজকের অনুভূতি কেমন?
+          <span id="mood-saved-lbl" style="color:var(--accent);margin-left:8px;font-size:12px;display:none;">✓ রেকর্ড হয়েছে</span>
+        </div>
+        <div class="mood-grid" id="mood-grid"></div>
+      </div>
+
+      <!-- Mood-Based Verse (Islamic mode + mood selected) -->
+      <div id="mood-verse-card" class="mood-verse-card" style="display:none;">
+        <div id="mood-verse-label" style="font-size:11px;color:var(--islamic);margin-bottom:6px;font-weight:700;"></div>
+        <div id="mood-verse-ar"   style="font-size:16px;color:var(--islamic);margin-bottom:4px;"></div>
+        <div id="mood-verse-bn"   style="font-size:13px;color:#d4b874;font-family:'Noto Serif Bengali',serif;line-height:1.7;white-space:pre-line;"></div>
+        <div id="mood-verse-ref"  style="font-size:11px;color:var(--muted);margin-top:4px;"></div>
+      </div>
+
+      <!-- Today's Habit Summary -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);">আজকের অভ্যাস</div>
+          <span class="tag" id="dash-points-tag" style="background:rgba(246,201,14,.1);color:var(--accent2);">⭐ 0 পয়েন্ট</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;">
+          <span id="dash-habit-count">0/8 সম্পন্ন</span>
+          <span id="dash-habit-pct">0%</span>
+        </div>
+        <div class="pbar-outer"><div class="pbar-inner" id="dash-pbar" style="width:0%"></div></div>
+      </div>
+
+      <!-- Daily Quote -->
+      <div style="background:linear-gradient(135deg,rgba(107,168,247,.07),rgba(107,168,247,.02));border:1px solid rgba(107,168,247,.18);border-radius:14px;padding:14px 16px;border-left:3px solid #6ba8f7;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">💡 আজকের কথা</div>
+        <div id="daily-quote" style="font-family:'Noto Serif Bengali',serif;font-size:14px;color:#9abff7;line-height:1.7;"></div>
+      </div>
+
+      <!-- Letter Preview / Write Prompt -->
+      <div id="letter-preview-card" class="card" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:700;color:#6ba8f7;">📬 ভবিষ্যৎ নিজের চিঠি</div>
+          <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="openLetterModal()">সম্পাদনা</button>
+        </div>
+        <div class="letter-preview" id="letter-preview-text"></div>
+      </div>
+      <div id="letter-write-prompt" class="card" style="display:none;border:1px dashed var(--border);text-align:center;padding:18px;">
+        <div style="font-size:22px;margin-bottom:6px;">📬</div>
+        <div style="font-size:13px;color:var(--muted);">ভবিষ্যৎ নিজেকে একটি চিঠি লিখুন</div>
+        <button class="btn btn-secondary" style="margin-top:10px;font-size:13px;" onclick="openLetterModal()">✍️ এখনই লিখুন</button>
+      </div>
+
+      <!-- Science Tip -->
+      <div class="card" style="border-left:3px solid #b57bee;">
+        <div style="font-size:12px;color:#b57bee;margin-bottom:5px;font-weight:700;">🧬 বিজ্ঞানের কথা</div>
+        <div id="science-tip" style="font-size:13px;color:var(--muted);line-height:1.7;"></div>
+      </div>
+
+      <!-- Relapse Report Button -->
+      <button class="relapse-btn" onclick="openRelapseModal()">রিল্যাপস রিপোর্ট করুন (লজ্জার কোনো কারণ নেই)</button>
+    </div><!-- /tab-dashboard -->
+
+    <!-- ─────────────── URGE TAB ────────────────────────────── -->
+    <div id="tab-urge" class="tab-panel">
+      <div>
+        <div class="section-title">🛡️ তাৎক্ষণিক সুরক্ষা</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">ইচ্ছা তরঙ্গের মতো — এটি সর্বোচ্চ ৩-৭ মিনিটে কমে আসে। নিচের যেকোনো কৌশল বেছে নাও।</div>
+      </div>
+
+      <!-- Win Banner -->
+      <div id="urge-win-banner" class="urge-win-banner fadeUp" style="display:none;">
+        <div style="font-size:30px;margin-bottom:4px;">🎉</div>
+        <div style="font-size:16px;font-weight:700;color:var(--accent);">অসাধারণ! আরেকটি ইচ্ছা জয় করেছ!</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;">মোট জয়: <span id="urge-win-count">0</span> বার</div>
+      </div>
+
+      <!-- Urge Counter -->
+      <div class="urge-count-box">
+        <div>
+          <div style="font-size:11px;color:var(--muted);">মোট ইচ্ছা জয়</div>
+          <div style="font-size:28px;font-weight:700;color:var(--accent);"><span id="urge-total-lbl">0</span> বার</div>
+        </div>
+        <button class="btn btn-primary" style="font-size:13px;padding:9px 14px;" onclick="showUrgeTrigger()">✅ এটিও জয় করলাম</button>
+      </div>
+      <div id="urge-trigger-box" style="display:none;"></div>
+
+      <!-- Accountability Partner -->
+      <div class="card" style="border-left:3px solid #25d366;">
+        <div style="font-size:13px;font-weight:700;color:#25d366;margin-bottom:8px;">👥 জবাবদিহিতার সঙ্গী</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">এই মুহূর্তে কাউকে জানাও। একাকীত্ব আসক্তিকে শক্তিশালী করে।</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="#" onclick="openPartnerWA(event)"   class="partner-btn partner-wa">  <span style="font-size:18px;">💬</span> WhatsApp-এ বার্তা পাঠাও</a>
+          <a href="#" onclick="openPartnerMail(event)" class="partner-btn partner-mail"><span style="font-size:18px;">✉️</span> Email পাঠাও</a>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px;" onclick="openPartnerModal()"><span>⚙️</span> সঙ্গীর তথ্য যোগ করুন</button>
+        </div>
+      </div>
+
+      <!-- Dopamine Menu -->
+      <div class="dopa-card">
+        <div style="font-size:13px;font-weight:700;color:#b57bee;margin-bottom:6px;">⚡ বিকল্প ডোপামিন মেনু</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">মস্তিষ্ককে স্বাস্থ্যকর পুরস্কার দাও — এখনই!</div>
+        <div id="dopa-suggestion" style="background:rgba(181,123,238,.1);border:1px solid rgba(181,123,238,.2);border-radius:12px;padding:14px;font-size:15px;font-weight:600;color:var(--text);text-align:center;min-height:54px;font-family:'Noto Serif Bengali',serif;display:flex;align-items:center;justify-content:center;"></div>
+        <button class="btn btn-secondary" style="margin-top:10px;width:100%;" onclick="getDopasuggestion()">🎲 আরেকটি পরামর্শ</button>
+      </div>
+
+      <!-- Tool Cards (rendered by tools.js) -->
+      <div id="tool-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+      <!-- Tasbih (Islamic mode only) -->
+      <div id="tasbih-section" style="display:none;">
+        <div class="card" style="border-left:3px solid var(--islamic);">
+          <div style="font-size:14px;font-weight:700;color:var(--islamic);margin-bottom:4px;">📿 ডিজিটাল তাসবিহ</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;">প্রতিটি ক্লিকে আল্লাহকে স্মরণ করো।</div>
+          <div style="text-align:center;">
+            <button class="tasbih-btn" id="tasbih-btn" onclick="tasbihClick(event)">
+              <div class="tasbih-count" id="tasbih-count">0</div>
+              <div class="tasbih-sub">তাসবিহ করুন</div>
+            </button>
+            <div id="tasbih-dhikr-label" style="margin-top:12px;font-size:14px;color:var(--islamic);font-family:'Noto Serif Bengali',serif;min-height:22px;"></div>
+            <div style="margin-top:8px;display:flex;gap:14px;justify-content:center;">
+              <span style="font-size:11px;color:var(--muted);">সেট: <span id="tasbih-set" style="color:var(--islamic);font-weight:700;">1</span>/3</span>
+              <span style="font-size:11px;color:var(--muted);">আজ মোট: <span id="tasbih-today" style="color:var(--accent);font-weight:700;">0</span></span>
+            </div>
+            <button class="btn btn-secondary" style="margin-top:10px;font-size:12px;" onclick="resetTasbih()">↺ রিসেট</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Islamic Urge Reminder (Islamic mode only) -->
+      <div id="urge-islamic" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:14px 16px;">
+        <div style="font-size:12px;color:var(--islamic);font-weight:700;margin-bottom:6px;">☪️ গায্ যুল বাসার</div>
+        <div style="font-size:14px;color:#d4b874;font-family:'Noto Serif Bengali',serif;line-height:1.7;">"যে আল্লাহর সন্তুষ্টির জন্য চোখ নত রাখে, আল্লাহ তার হৃদয়ে মিষ্টতা ঢেলে দেন।"</div>
+        <div style="margin-top:8px;font-size:13px;color:#d4b874;">🤲 বলুন: <em>أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</em></div>
+      </div>
+
+      <!-- Trigger Log -->
+      <div id="trigger-log-card" class="card" style="display:none;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;">📋 সাম্প্রতিক ট্রিগার লগ</div>
+        <div id="trigger-log-list"></div>
+      </div>
+    </div><!-- /tab-urge -->
+
+    <!-- ─────────────── HABITS TAB ──────────────────────────── -->
+    <div id="tab-habits" class="tab-panel">
+      <div>
+        <div class="section-title">✅ দৈনিক অভ্যাস গঠন</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">ইতিবাচক অভ্যাস পুরনো নেতিবাচক হ্যাবিট লুপকে প্রতিস্থাপন করে।</div>
+      </div>
+
+      <!-- Points Summary -->
+      <div class="points-box">
+        <div>
+          <div style="font-size:11px;color:var(--muted);">আজকের পয়েন্ট</div>
+          <div style="font-size:28px;font-weight:700;color:var(--accent2);">⭐ <span id="habit-points">0</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:var(--muted);">সম্পন্ন</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);"><span id="habit-done-count">0</span><span style="color:var(--muted);font-size:15px;">/8</span></div>
+        </div>
+      </div>
+
+      <!-- Habit List (rendered by render.js) -->
+      <div id="habit-list"></div>
+
+      <!-- Quran Tracker (Islamic mode only) -->
+      <div id="quran-tracker-section" style="display:none;" class="quran-tracker">
+        <div style="font-size:14px;font-weight:700;color:var(--islamic);margin-bottom:4px;">📖 কুরআন ট্র্যাকার</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">শেষবার কোথায় পড়েছিলে সেটি সেভ করো</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">সূরা নাম / নম্বর</label>
+            <input type="text"   id="qt-surah" class="qt-input" placeholder="যেমন: আল-বাকারা"/>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">আয়াত নম্বর</label>
+            <input type="number" id="qt-ayah"  class="qt-input" placeholder="যেমন: 45" min="1"/>
+          </div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">নোট (ঐচ্ছিক)</label>
+          <input type="text" id="qt-note" class="qt-input" placeholder="এই আয়াতটি মনে রাখতে চাই..."/>
+        </div>
+        <button class="btn btn-islamic" style="width:100%;justify-content:center;" onclick="saveQuranProgress()">💾 সেভ করো</button>
+        <div id="qt-saved-display" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(201,168,76,.1);border-radius:8px;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">শেষ পঠিত অবস্থান:</div>
+          <div id="qt-saved-text" style="font-size:13px;color:#d4b874;font-weight:600;"></div>
+          <div id="qt-saved-note" style="font-size:12px;color:var(--muted);margin-top:2px;"></div>
+          <div id="qt-saved-date" style="font-size:10px;color:var(--muted);margin-top:2px;"></div>
+        </div>
+      </div>
+
+      <!-- Habit Loop Diagram -->
+      <div class="card" style="border-top:3px solid #b57bee;margin-top:4px;">
+        <div style="font-size:13px;font-weight:700;color:#b57bee;margin-bottom:10px;">🔄 হ্যাবিট লুপ তত্ত্ব</div>
+        <div class="loop-diagram">
+          <div><div style="font-size:12px;color:#e05c5c;font-weight:700;">ট্রিগার</div><div style="font-size:10px;color:var(--muted);">কারণ</div></div>
+          <div><div style="font-size:18px;color:var(--muted);font-weight:700;">→</div></div>
+          <div><div style="font-size:12px;color:#f6c90e;font-weight:700;">রুটিন</div><div style="font-size:10px;color:var(--muted);">অভ্যাস</div></div>
+          <div><div style="font-size:18px;color:var(--muted);font-weight:700;">→</div></div>
+          <div><div style="font-size:12px;color:#4ecca3;font-weight:700;">পুরস্কার</div><div style="font-size:10px;color:var(--muted);">ফলাফল</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;">পুরনো নেতিবাচক রুটিনকে নতুন ইতিবাচক অভ্যাস দিয়ে প্রতিস্থাপন করো।</div>
+      </div>
+    </div><!-- /tab-habits -->
+
+    <!-- ─────────────── PROGRESS TAB ────────────────────────── -->
+    <div id="tab-progress" class="tab-panel">
+      <div class="section-title">📊 তোমার অগ্রগতি</div>
+      <div class="stats-grid" id="stats-grid"></div>
+
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;">😊 সাপ্তাহিক মেজাজ</div>
+        <div class="mood-chart" id="mood-chart"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">🏅 অর্জন সমূহ</div>
+        <div class="achieve-grid" id="achieve-grid"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">📌 ট্রিগার বিশ্লেষণ</div>
+        <div id="trigger-summary-content"></div>
+      </div>
+
+      <!-- Flatline Info -->
+      <div class="flatline-card">
+        <div style="font-size:13px;font-weight:700;color:#6ba8f7;margin-bottom:8px;">⚠️ ফ্ল্যাটলাইন সম্পর্কে জানো</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.75;">
+          পর্নোগ্রাফি বন্ধ করার ২-৮ সপ্তাহের মধ্যে অনেকে "ফ্ল্যাটলাইন" অনুভব করেন।<br/><br/>
+          <strong style="color:#9abff7;">এটি ব্যর্থতার লক্ষণ নয় — মস্তিষ্কের নিরাময়ের প্রমাণ।</strong>
+        </div>
+        <div id="flatline-indicator" style="margin-top:10px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;display:inline-block;"></div>
+      </div>
+
+      <!-- Recovery Timeline -->
+      <div class="card">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;">🧬 নিরাময় টাইমলাইন</div>
+        <div id="recovery-timeline"></div>
+      </div>
+
+      <div style="background:rgba(224,92,92,.05);border:1px solid rgba(224,92,92,.13);border-radius:14px;padding:14px 16px;">
+        <div style="font-size:13px;font-weight:600;color:#f08080;margin-bottom:5px;">❤️ মনে রেখো</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">রিল্যাপস মানে ব্যর্থতা নয় — এটি শেখার অংশ। তুমি প্রতিটি দিন নতুন করে শুরু করতে পারো।</div>
+      </div>
+    </div><!-- /tab-progress -->
+
+    <!-- ─────────────── SETTINGS TAB ────────────────────────── -->
+    <div id="tab-settings" class="tab-panel">
+      <div class="section-title">⚙️ সেটিংস</div>
+
+      <!-- Toggles -->
+      <div class="card">
+        <div class="toggle-row">
+          <div><div class="toggle-label">☪️ ইসলামিক মোড</div><div class="toggle-desc">কুরআনিক অনুস্মারক ও আধ্যাত্মিক উৎসাহ</div></div>
+          <div class="toggle-switch" id="toggle-islamic" onclick="toggleIslamic()"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">🔔 দৈনিক স্মরণ</div><div class="toggle-desc">অভ্যাস ও প্রতিফলনের জন্য বিজ্ঞপ্তি</div></div>
+          <div class="toggle-switch" id="toggle-notif" onclick="toggleNotif()"><div class="toggle-knob"></div></div>
+        </div>
+        <div style="padding-top:13px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">📍 অবস্থান (নামাজের সময়)</div>
+          <div id="location-status" style="font-size:12px;color:var(--muted);">Geolocation ব্যবহার করে স্বয়ংক্রিয়ভাবে নির্ধারিত হবে।</div>
+        </div>
+      </div>
+
+      <!-- Accountability Partner -->
+      <div class="card" style="border-left:3px solid #25d366;">
+        <div style="font-size:13px;font-weight:700;color:#25d366;margin-bottom:12px;">👥 জবাবদিহিতার সঙ্গী</div>
+        <div style="margin-bottom:8px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">WhatsApp নম্বর (দেশ কোডসহ)</label>
+          <input type="tel"   id="partner-phone" class="qt-input" placeholder="+8801XXXXXXXXX"/>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Email ঠিকানা</label>
+          <input type="email" id="partner-email" class="qt-input" placeholder="bondhu@example.com"/>
+        </div>
+        <button class="btn btn-primary" style="width:100%;font-size:14px;" onclick="savePartnerInfo()">💾 সেভ করো</button>
+        <div id="partner-saved-msg" style="display:none;margin-top:8px;font-size:12px;color:var(--accent);">✅ সংরক্ষিত হয়েছে!</div>
+      </div>
+
+      <!-- Letter to Future Self -->
+      <div class="card" style="border-left:3px solid #6ba8f7;">
+        <div style="font-size:13px;font-weight:700;color:#6ba8f7;margin-bottom:8px;">📬 ভবিষ্যৎ নিজেকে চিঠি</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">এই চিঠিটি জরুরি মুহূর্তে স্বয়ংক্রিয়ভাবে দেখাবে।</div>
+        <button class="btn btn-secondary" style="width:100%;font-size:14px;" onclick="openLetterModal()">✍️ চিঠি লিখুন / সম্পাদনা করুন</button>
+      </div>
+
+      <!-- Data Reset -->
+      <div class="card" style="border-color:rgba(224,92,92,.2);">
+        <div style="font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:10px;">⚠️ ডেটা ম্যানেজমেন্ট</div>
+        <button class="btn btn-danger" style="width:100%;padding:11px;" onclick="resetData()">🗑️ সমস্ত তথ্য মুছুন (রিসেট)</button>
+      </div>
+
+      <!-- Cloudflare DNS Guide -->
+      <div class="card" style="border-left:3px solid var(--accent);">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px;">🛡️ Cloudflare Family DNS সেটআপ</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">এটি সেট করলে তোমার ডিভাইসে প্রাপ্তবয়স্ক কন্টেন্ট স্বয়ংক্রিয়ভাবে ব্লক হবে।</div>
+        <div class="dns-step"><div class="dns-num">১</div><div style="font-size:13px;color:var(--text);padding-top:3px;">Wi-Fi সেটিংস খুলো → DNS পরিবর্তন করো</div></div>
+        <div class="dns-step"><div class="dns-num">২</div><div><div style="font-size:13px;color:var(--text);">Primary DNS:</div><div class="dns-code">1.1.1.3</div></div></div>
+        <div class="dns-step"><div class="dns-num">৩</div><div><div style="font-size:13px;color:var(--text);">Secondary DNS:</div><div class="dns-code">1.0.0.3</div></div></div>
+        <div class="dns-step"><div class="dns-num">৪</div><div style="font-size:13px;color:var(--text);padding-top:3px;">Android Private DNS: সেটিংস → নেটওয়ার্ক → Private DNS → <span style="color:var(--accent);">family.cloudflare-dns.com</span></div></div>
+      </div>
+
+      <!-- Science References -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;">📚 বৈজ্ঞানিক ভিত্তি</div>
+        <div class="science-item"><span style="color:var(--accent);">✓</span> হ্যাবিট লুপ তত্ত্ব (Duhigg, 2012)</div>
+        <div class="science-item"><span style="color:var(--accent);">✓</span> ডোপামিন নিয়ন্ত্রণ (Berridge &amp; Robinson)</div>
+        <div class="science-item"><span style="color:var(--accent);">✓</span> CBT আসক্তি চিকিৎসা পদ্ধতি</div>
+        <div class="science-item"><span style="color:var(--accent);">✓</span> আর্জ সার্ফিং (Marlatt &amp; Gordon, 1985)</div>
+        <div class="science-item"><span style="color:var(--accent);">✓</span> নিউরোপ্লাস্টিসিটি গবেষণা (Doidge, 2007)</div>
+        <div class="science-item" style="border-bottom:none;"><span style="color:var(--accent);">✓</span> ৪-৭-৮ শ্বাস (Dr. Andrew Weil)</div>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div style="background:rgba(107,168,247,.05);border:1px solid rgba(107,168,247,.13);border-radius:14px;padding:14px 16px;">
+        <div style="font-size:13px;font-weight:600;color:#6ba8f7;margin-bottom:5px;">🔒 গোপনীয়তার প্রতিশ্রুতি</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7;">তোমার সমস্ত তথ্য শুধুমাত্র তোমার ডিভাইসে সংরক্ষিত (localStorage)। কোনো সার্ভারে পাঠানো হয় না।</div>
+      </div>
+    </div><!-- /tab-settings -->
+
+  </main><!-- /main-content -->
+
+  <!-- ══════════════════ MODALS ═══════════════════════════════════ -->
+
+  <!-- Morning Pledge Modal -->
+  <div id="pledge-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="border-color:rgba(78,204,163,.3);text-align:center;">
+      <div style="font-size:40px;margin-bottom:10px;">🌅</div>
+      <div style="font-family:'Noto Serif Bengali',serif;font-size:20px;color:var(--text);margin-bottom:8px;">শুভ সকাল!</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;">একটি নতুন দিন শুরু হচ্ছে। আজকের জন্য একটি ছোট্ট অঙ্গীকার নাও।</div>
+      <div style="background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.2);border-radius:12px;padding:16px;margin-bottom:16px;">
+        <div style="font-family:'Noto Serif Bengali',serif;font-size:15px;color:var(--text);line-height:1.75;">"শুধু আজকের জন্য — আমি এই অভ্যাস থেকে দূরে থাকব।<br/>শুধু আজ। একদিন একদিন করে।"</div>
+      </div>
+      <div id="pledge-modal-islamic" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:12px;margin-bottom:16px;">
+        <div style="font-size:15px;color:var(--islamic);">وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا</div>
+        <div style="font-size:12px;color:#d4b874;margin-top:4px;">যে আল্লাহকে ভয় করে, তিনি তার জন্য পথ তৈরি করে দেন।</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:13px;font-size:15px;" onclick="acceptPledge()">✅ হ্যাঁ, আমি আজ পারব!</button>
+      <button onclick="closePledgeModal()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:12px;margin-top:10px;font-family:'Hind Siliguri',sans-serif;">এড়িয়ে যাও</button>
+    </div>
+  </div>
+
+  <!-- Letter to Future Self Modal -->
+  <div id="letter-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="border-color:rgba(107,168,247,.3);">
+      <div style="font-size:14px;font-weight:700;color:#6ba8f7;margin-bottom:6px;">📬 ভবিষ্যৎ নিজেকে চিঠি</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">এই চিঠিটি জরুরি মুহূর্তে তোমাকে ফিরে আসতে সাহায্য করবে।</div>
+      <textarea id="letter-textarea" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:13px;resize:vertical;min-height:180px;font-family:'Noto Serif Bengali',serif;line-height:1.75;"
+        placeholder="প্রিয় ভবিষ্যৎ আমি,&#10;&#10;আজ আমি তোমাকে মনে করিয়ে দিতে চাই যে তুমি কেন এই পথে হাঁটতে শুরু করেছিলে..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-primary"    style="flex:1;padding:11px;font-size:14px;" onclick="saveLetter()">💾 সেভ করো</button>
+        <button class="btn btn-secondary"  style="font-size:14px;" onclick="closeLetterModal()">বাতিল</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Modal -->
+  <div id="emergency-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="border-color:rgba(224,92,92,.3);">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:36px;margin-bottom:6px;">🛡️</div>
+        <div style="font-family:'Noto Serif Bengali',serif;font-size:18px;color:var(--text);margin-bottom:6px;">তুমি শক্তিশালী!</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">এই তীব্র ইচ্ছা সর্বোচ্চ ৭ মিনিটে কমে আসবে।</div>
+      </div>
+      <div id="emergency-letter-section" style="display:none;margin-bottom:14px;">
+        <div style="font-size:12px;color:#6ba8f7;font-weight:700;margin-bottom:6px;">📬 তোমার নিজের কথা মনে করো:</div>
+        <div id="emergency-letter-text" style="background:rgba(107,168,247,.08);border:1px solid rgba(107,168,247,.2);border-radius:10px;padding:12px;font-size:13px;color:#9abff7;line-height:1.75;font-family:'Noto Serif Bengali',serif;max-height:120px;overflow-y:auto;"></div>
+      </div>
+      <div id="emergency-islamic" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:12px;margin-bottom:14px;text-align:center;">
+        <div style="font-size:15px;color:var(--islamic);">إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+        <div style="font-size:12px;color:#d4b874;margin-top:4px;">নিশ্চয়ই কষ্টের সাথে স্বস্তি আছে।</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-primary"   style="width:100%;padding:12px;font-size:14px;" onclick="closeEmergencyAndGoUrge()">🛡️ সুরক্ষা টুলস খুলুন</button>
+        <button class="btn btn-secondary" style="width:100%;padding:11px;font-size:14px;" onclick="closeEmergencyModal()">আমি নিরাপদ আছি</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relapse Modal -->
+  <div id="relapse-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="border-color:rgba(224,92,92,.25);">
+      <div id="relapse-step-confirm">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:38px;margin-bottom:8px;">❤️</div>
+          <div style="font-family:'Noto Serif Bengali',serif;font-size:18px;color:var(--text);margin-bottom:8px;">লজ্জার কোনো কারণ নেই</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;">রিল্যাপস পুনরুদ্ধারের একটি স্বাভাবিক অংশ।</div>
+        </div>
+        <div id="relapse-islamic-note" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:11px;margin-bottom:14px;text-align:center;">
+          <div style="font-size:13px;color:#d4b874;font-family:'Noto Serif Bengali',serif;">"নিশ্চয়ই আল্লাহ তওবাকারীদের ভালোবাসেন।"</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">সূরা বাকারা ২:২২২</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn btn-primary"   style="width:100%;padding:12px;font-size:14px;" onclick="relapseGoToTrigger()">হ্যাঁ, রিল্যাপস হয়েছে — রিপোর্ট করব</button>
+          <button class="btn btn-secondary" style="width:100%;padding:12px;font-size:14px;" onclick="closeRelapseModal()">না, আমি শক্ত আছি</button>
+        </div>
+      </div>
+      <div id="relapse-step-trigger" style="display:none;">
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;">📌 কারণ কী ছিল? (শেখার জন্য)</div>
+        <div id="relapse-trigger-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accountability Partner Quick Modal -->
+  <div id="partner-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="border-color:rgba(37,211,102,.3);">
+      <div style="font-size:15px;font-weight:700;color:#25d366;margin-bottom:14px;">👥 সঙ্গীর তথ্য</div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;">WhatsApp নম্বর</label>
+        <input type="tel"   id="pm-phone" class="qt-input" placeholder="+8801XXXXXXXXX"/>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;">Email</label>
+        <input type="email" id="pm-email" class="qt-input" placeholder="bondhu@example.com"/>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary"   style="flex:1;" onclick="savePartnerFromModal()">💾 সেভ</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('partner-modal').style.display='none'">বাতিল</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievement Toast -->
+  <div id="achievement-toast">
+    <span id="toast-icon"  style="font-size:36px;"></span>
+    <div>
+      <div style="font-size:11px;color:var(--accent2);font-weight:700;letter-spacing:.5px;">🏅 নতুন অর্জন!</div>
+      <div id="toast-title" style="font-size:15px;font-weight:700;color:var(--text);"></div>
+      <div id="toast-desc"  style="font-size:12px;color:var(--muted);"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BOTTOM NAV ═══════════════════════════════ -->
+  <nav id="bottom-nav">
+    <button class="nav-btn active" data-tab="dashboard" onclick="switchTab('dashboard')"><span class="nav-icon">🏠</span><span class="nav-label">হোম</span></button>
+    <button class="nav-btn"        data-tab="urge"      onclick="switchTab('urge')"     ><span class="nav-icon">🛡️</span><span class="nav-label">সুরক্ষা</span></button>
+    <button class="nav-btn"        data-tab="habits"    onclick="switchTab('habits')"   ><span class="nav-icon">✅</span><span class="nav-label">অভ্যাস</span></button>
+    <button class="nav-btn"        data-tab="progress"  onclick="switchTab('progress')" ><span class="nav-icon">📊</span><span class="nav-label">অগ্রগতি</span></button>
+    <button class="nav-btn"        data-tab="settings"  onclick="switchTab('settings')" ><span class="nav-icon">⚙️</span><span class="nav-label">সেটিং</span></button>
+  </nav>
+
+</div><!-- #app -->
+
+<!--
+  ══════════════════════════════════════════════════════════════
+  JavaScript — load order matters:
+    1. constants  — pure data, no dependencies
+    2. state      — depends on constants (MOTIVATIONAL, ISLAMIC_VERSES, LS_KEY)
+    3. utils      — pure helpers, no dependencies
+    4. api        — depends on utils (getEl)
+    5. prayer     — depends on state, utils, constants (PRAYER_KEYS, PRAYER_NAMES)
+    6. render     — depends on all of the above
+    7. tools      — depends on render, utils, constants
+    8. handlers   — depends on render, state, tools
+    9. app        — entry point, depends on everything
+  ══════════════════════════════════════════════════════════════
+-->
+<script src="js/constants.js"></script>
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/prayer.js"></script>
+<script src="js/render.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/handlers.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
